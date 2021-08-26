@@ -1,9 +1,7 @@
 # install nextflow using mamba (requires conda/mamba)
 mamba create -n replace_rsid_in_qcfiles --channel bioconda \
-  nextflow==20.10.0 \
-  bcftools=1.9 \
-  tabix
-
+  nextflow==20.10.0
+  
 # Activate environment
 conda activate replace_rsid_in_qcfiles
 
