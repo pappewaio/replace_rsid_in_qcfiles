@@ -1,0 +1,1 @@
+data/imputeQCmetrics/imputeQualityMetrics.txt data/mapfiles/GRCh37_example_data.vcf.map.gz

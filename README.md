@@ -6,4 +6,6 @@ mamba create -n replace_rsid_in_qcfiles --channel bioconda \
 conda activate replace_rsid_in_qcfiles
 
 # Run a single file
-nextflow replace_id.nf --input 'data/1kgp/GRCh37/GRCh37_example_data.vcf.gz' --mapfile 'path/to'
+nextflow run replace_rsid_in_qcfile.nf --input 'data/runfile/runfile.txt' --outdir out
+
+
