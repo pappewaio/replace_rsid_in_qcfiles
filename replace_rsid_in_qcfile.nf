@@ -1,6 +1,7 @@
 nextflow.enable.dsl=2
 
 // Use same replace column as in the vcf_reference_build_tools
+// However by recreating it
 process create_rsid_replace_column {
     publishDir "${params.outdir}/intermediates/${id}", mode: 'rellink', overwrite: true
     input:
@@ -14,6 +15,7 @@ process create_rsid_replace_column {
       """
 }
 
+// make the final replace in the qc file
 process replace_file1_column_with_file2_column {
     publishDir "${params.outdir}/updated_qc_files", mode: 'copy', overwrite: false
     input:
