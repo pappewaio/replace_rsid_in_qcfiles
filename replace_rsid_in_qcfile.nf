@@ -9,7 +9,7 @@ process create_rsid_replace_column {
       tuple val(id), path(qcin), path("map_replace_col_${id}")
     script:
       """
-      gunzip -c ${map} > unzipped_map 
+      gunzip -c ${map} | awk '{print NR, \$0}' > unzipped_map 
       create_rsid_replace_column.sh unzipped_map map_replace_col_${id}
       """
 }
@@ -17,13 +17,13 @@ process create_rsid_replace_column {
 process replace_file1_column_with_file2_column {
     publishDir "${params.outdir}/updated_qc_files", mode: 'copy', overwrite: false
     input:
-      tuple val(id), path(qcin), path("map_replace_col")
+      tuple val(id), path("qcin"), path("map_replace_col")
     output:
       tuple val(id), path("${id}.txt")
     script:
       """
       #remember to gzip and put in final out folder, not intermediates
-      replace_file1_column_with_file2_column.sh $qcin 3 map_replace_col 2 > ${id}.txt
+      replace_file1_column_with_file2_column.sh qcin 3 map_replace_col 2 > ${id}.txt
       """
 }
 
