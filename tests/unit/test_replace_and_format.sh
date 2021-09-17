@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-test_script="replace_file1_column_with_file2_column"
+test_script="replace_and_format"
 initial_dir=$(pwd)"/${test_script}"
 curr_case=""
 
@@ -31,9 +31,8 @@ function _check_results {
 }
 
 function _run_script {
-  coln1=$1
-  coln2=$2
-  "${test_script}.sh" ./file1.txt ${coln1} ./file2.txt ${coln2} > ./observed-result1.tsv
+
+  "${test_script}.sh" ./input.tsv > ./observed-result1.tsv
 
   _check_results ./observed-result1.tsv ./expected-result1.tsv
 
@@ -53,32 +52,25 @@ echo ">> Test ${test_script}"
 
 _setup "simple case"
 
-cat <<EOF > ./file1.txt
-ROWINDEX NEWRSID
-2 rs228729 if_exists_in_original_and_exists_in_dbsnp_chrom_not_same
-3 8_1_rs12754538_C if_exists_in_original_and_exists_in_dbsnp_chrom_not_same
-4 rs2480782 if_exists_in_original_and_exists_in_dbsnp_chrom_not_same
-5 10_1_rs12565367_A if_exists_in_original_and_exists_in_dbsnp_chrom_not_same
-EOF
-
-cat <<EOF > ./file2.txt
-CHR POS ID REF ALT MAF AR2 DR2 Hwe DR2 Accuracy Score
-1 7845695 rs228729 T C 0,1 0,2 0,3 0,4 0,5 0,6 0,7
-1 8473813 rs12754538 C T 0,1 0,2 0,3 0,4 0,5 0,6 0,7
-1 10593296 rs2480782 G T 0,1 0,2 0,3 0,4 0,5 0,6 0,7
-1 18420144 rs12565367 A G 0,1 0,2 0,3 0,4 0,5 0,6 0,7
+cat <<EOF > ./input.tsv
+1-104654614-G-A rs12067399 30 1 104654614 rs12067399 G A 0,1 0,2 0,3 0,4 0,5 0,6 0,7
+1-10593296-G-T rs2480782 4 1 10593296 rs2480782 G T 0,1 0,2 0,3 0,4 0,5 0,6 0,7
+1-106792422-G-A rs12568304 31 1 106792422 rs12568304 G A 0,1 0,2 0,3 0,4 0,5 0,6 0,7
+1-108097237-A-C rs17019427 32 1 108097237 rs17019427 A C 0,1 0,2 0,3 0,4 0,5 0,6 0,7
+1-109357456-C-A rs10494099 33 1 109357456 rs10494099 C A 0,1 0,2 0,3 0,4 0,5 0,6 0,7
 EOF
 
 cat <<EOF > ./expected-result1.tsv
-CHR POS ID REF ALT MAF AR2 DR2 Hwe DR2 Accuracy Score
-1 7845695 rs228729 T C 0,1 0,2 0,3 0,4 0,5 0,6 0,7
-1 8473813 8_1_rs12754538_C C T 0,1 0,2 0,3 0,4 0,5 0,6 0,7
-1 10593296 rs2480782 G T 0,1 0,2 0,3 0,4 0,5 0,6 0,7
-1 18420144 10_1_rs12565367_A A G 0,1 0,2 0,3 0,4 0,5 0,6 0,7
+30 1 104654614 rs12067399 G A 0,1 0,2 0,3 0,4 0,5 0,6
+4 1 10593296 rs2480782 G T 0,1 0,2 0,3 0,4 0,5 0,6
+31 1 106792422 rs12568304 G A 0,1 0,2 0,3 0,4 0,5 0,6
+32 1 108097237 rs17019427 A C 0,1 0,2 0,3 0,4 0,5 0,6
+33 1 109357456 rs10494099 C A 0,1 0,2 0,3 0,4 0,5 0,6
 EOF
 
-_run_script 2 3
+_run_script
 
 #---------------------------------------------------------------------------------
 # Next case
+
 
