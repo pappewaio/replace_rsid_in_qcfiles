@@ -5,6 +5,7 @@ Version 1.0.0
 
 ## quick start
 
+```
 # install nextflow using mamba (requires conda/mamba)
 mamba create -n replace_rsid_in_qcfiles --channel bioconda \
   nextflow==20.10.0
@@ -13,9 +14,11 @@ mamba create -n replace_rsid_in_qcfiles --channel bioconda \
 conda activate replace_rsid_in_qcfiles
 
 # Run a single file
-
-```
 nextflow run replace_rsid_in_qcfile_from_mapfiles.nf --input 'data/runfile/runfile.txt' --outdir out
+
+# Inspect check files (make sure all number rows, nr, are same)
+cat out/nr_checks/*/*
+
 ```
 
 ## Background and mapping strategy
@@ -35,6 +38,8 @@ Notes:
 Step 1) the merge of all mapfiles (if they are separated by e.g., chromosome), will be done outside the pipeline using a simple 'cat' command.
 
 Step 4) A sort -u is done, and need to be followed up by comparing wc -l to all files and make sure they are same lenghts.
+
+A final validifier that everything went ok and no rows were left behind is to scan throuvh the check files in 'out/nr_checks'
 
 ## Dev section
 
