@@ -13,12 +13,15 @@ mamba create -n replace_rsid_in_qcfiles --channel bioconda \
 conda activate replace_rsid_in_qcfiles
 
 # Run a single file
-nextflow run replace_rsid_in_qcfile.nf --input 'data/runfile/runfile.txt' --outdir out
+
+```
+nextflow run replace_rsid_in_qcfile_from_mapfiles.nf --input 'data/runfile/runfile.txt' --outdir out
+```
 
 ## Background and mapping strategy
 A previous mapping has been done to the VCF file that produces the QC-file-that is being mapped again here
 
-One approach is(Note that the code right now is doing something different, so after this commit I will delete this note and rewrite the pipeline according to the plan outlined below):
+The approach will be:
 We can use the produced mapfiles and match on chromosome_position_ref_alt information. This require the steps:
 1) Merge all mapfiles
 2) Add rownumber to qc-file
@@ -28,6 +31,10 @@ We can use the produced mapfiles and match on chromosome_position_ref_alt inform
 6) check that everything had a match
 7) prepare final output using the updated rsid
 
+Notes:
+Step 1) the merge of all mapfiles (if they are separated by e.g., chromosome), will be done outside the pipeline using a simple 'cat' command.
+
+Step 4) A sort -u is done, and need to be followed up by comparing wc -l to all files and make sure they are same lenghts.
 
 ## Dev section
 
@@ -40,6 +47,7 @@ zcat data/mapfiles/GRCh37_example_data.vcf.map.gz | tail -n+2 | awk '{print $2, 
 
 #zip it
 gzip -c data/imputeQCmetrics/imputeQualityMetrics.txt > data/imputeQCmetrics/imputeQualityMetrics.txt.gz 
+rm data/imputeQCmetrics/imputeQualityMetrics.txt
 
 #inspect file
 zcat data/imputeQCmetrics/imputeQualityMetrics.txt.gz | head
@@ -47,7 +55,22 @@ zcat data/imputeQCmetrics/imputeQualityMetrics.txt.gz | head
 
 ```
 
-### SNP_QC example data
+### SNP_QC.out example data
+MAF and the other stats will just be 0.1, 0.2, 0.3, etc (which should be fine as we intend to only modify column 3 the rsID)
+
+```
+echo -e "CHROM POSITION ID REF ALT GenotypeWaveAssociation ImputeBatchAssociation HWE MAF ImputeRsq SamplePlateAssociation SSIPlateAssociation" > data/SNP_QC/SNP_QC.out
+
+zcat data/mapfiles/GRCh37_example_data.vcf.map.gz | tail -n+2 | awk '{print $2, $3, $4, $5, $6, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7 }' >> data/SNP_QC/SNP_QC.out
+
+#zip it
+gzip -c data/SNP_QC/SNP_QC.out > data/SNP_QC/SNP_QC.out.gz 
+rm data/SNP_QC/SNP_QC.out
+
+#inspect file
+zcat data/SNP_QC/SNP_QC.out.gz | head
+
+```
 
 
 
