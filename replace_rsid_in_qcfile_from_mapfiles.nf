@@ -46,8 +46,8 @@ process check_index_duplicates {
       path("*.linecount")
     script:
       """
-      LC_ALL=C sort -k1,1 -u ${map} > check_rowindex_dups_map_${id}
-      LC_ALL=C sort -k2,2 -u ${qcin} > check_rowindex_dups_qcin_${id}
+      check_index_duplicates.sh "${map}" "1,1" > check_rowindex_dups_map_${id}
+      check_index_duplicates.sh "${qcin}" "2,2" > check_rowindex_dups_qcin_${id}
       wc -l check_rowindex_dups_map_${id} > check_rowindex_dups_map_${id}.linecount
       wc -l check_rowindex_dups_qcin_${id} > check_rowindex_dups_qcin_${id}.linecount
       """
