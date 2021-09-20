@@ -12,8 +12,8 @@ process add_rowindex_and_sortindex {
     script:
       """
       # remove the header, which can be added later again
-      paste -d" " <(zcat ${map} | head -n1 | awk '{print "sortindex", \$4}' ) <(zcat ${qcin} | head -n1 | awk '{print 1, "sortindex", \$0}' ) > merged_header_${id}
-      gunzip -c ${map} | awk 'NR>1{print \$2"-"\$3"-"\$5"-"\$6, \$4}' > unzipped_rowindexed_map_${id}
+      paste -d" " <(zcat ${map} | head -n1 | awk '{print "sortindex", \$12}' ) <(zcat ${qcin} | head -n1 | awk '{print 1, "sortindex", \$0}' ) > merged_header_${id}
+      gunzip -c ${map} | awk 'NR>1{print \$2"-"\$3"-"\$5"-"\$6, \$12}' > unzipped_rowindexed_map_${id}
       gunzip -c ${qcin} | awk 'NR>1{print NR, \$1"-"\$2"-"\$4"-"\$5, \$0}' > unzipped_rowindexed_qcin_${id}
       wc -l unzipped_rowindexed_map_${id} > unzipped_rowindexed_map_${id}.linecount
       wc -l unzipped_rowindexed_qcin_${id} > unzipped_rowindexed_qcin_${id}.linecount
