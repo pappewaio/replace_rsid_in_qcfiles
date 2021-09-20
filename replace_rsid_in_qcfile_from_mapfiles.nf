@@ -94,11 +94,11 @@ process original_sorting {
     input:
       tuple val(id), path("qcin")
     output:
-      tuple val(id), path("${id}")
+      tuple val(id), path("${id}.gz")
       path("*.linecount")
     script:
       """
-      LC_ALL=C sort -k1,1 -n qcin | cut -d ' ' -f2- > ${id}
+      LC_ALL=C sort -k1,1 -n qcin | cut -d ' ' -f2- | gzip -c > ${id}.gz
       wc -l ${id} | awk '{\$1=\$1-1;print \$0}' > ${id}.linecount
       """
 }
@@ -107,15 +107,14 @@ process compare_bp_new_and_original {
     publishDir "${params.outdir}/intermediates/${id}", mode: 'rellink', overwrite: true
     publishDir "${params.outdir}/diff_checks/${id}", mode: 'copy', overwrite: true, pattern: '*.diff'
     input:
-      tuple val(id), path(updatedqcin), path(qcin), path(map)
+      tuple val(id), path("updatedqcin.gz"), path(qcin), path(map)
     output:
-      tuple val(id), path("${id}")
       path("*.diff")
       path("*_bp")
     script:
       """
       zcat ${qcin} | awk '{print \$2}' > qcin_bp
-      cat ${updatedqcin} | awk '{print \$2}' > updatedqcin_bp
+      zcat updatedqcin.gz | awk '{print \$2}' > updatedqcin_bp
       diff -s qcin_bp updatedqcin_bp > matched_bp_old_and_new_${id}.diff
       """
 }

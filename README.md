@@ -19,8 +19,11 @@ nextflow run replace_rsid_in_qcfile_from_mapfiles.nf --input 'data/runfile/runfi
 # Run a single file - example data 2
 nextflow run replace_rsid_in_qcfile_from_mapfiles.nf --input 'data/runfile/runfile2.txt' --outdir out
 
-# Inspect check files (make sure all number rows, nr, are same)
+# Inspect check files (make sure numbers are as expected)
 cat out/nr_checks/*/*
+
+# Inspect diff files  (should return that they are identical)
+cat out/diff_checks/*/*
 
 ```
 
