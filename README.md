@@ -13,8 +13,11 @@ mamba create -n replace_rsid_in_qcfiles --channel bioconda \
 # Activate environment
 conda activate replace_rsid_in_qcfiles
 
-# Run a single file
-nextflow run replace_rsid_in_qcfile_from_mapfiles.nf --input 'data/runfile/runfile.txt' --outdir out
+# Run a single file - example data 1
+nextflow run replace_rsid_in_qcfile_from_mapfiles.nf --input 'data/runfile/runfile1.txt' --outdir out
+
+# Run a single file - example data 2
+nextflow run replace_rsid_in_qcfile_from_mapfiles.nf --input 'data/runfile/runfile2.txt' --outdir out
 
 # Inspect check files (make sure all number rows, nr, are same)
 cat out/nr_checks/*/*
