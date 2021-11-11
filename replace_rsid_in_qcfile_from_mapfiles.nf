@@ -99,7 +99,7 @@ process original_sorting {
     script:
       """
       LC_ALL=C sort -k1,1 -n qcin | cut -d ' ' -f2- | gzip -c > ${id}.gz
-      wc -l ${id} | awk '{\$1=\$1-1;print \$0}' > ${id}.linecount
+      wc -l <(zcat ${id}.gz) | awk '{\$1=\$1-1;print \$0}' > ${id}.linecount
       """
 }
 
