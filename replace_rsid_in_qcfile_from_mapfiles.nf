@@ -140,6 +140,7 @@ workflow {
     .join(init_file_tracker)
     .set { compare_bp_ch}
 
+  // Sanity check
   compare_bp_new_and_original(compare_bp_ch)
 
 }
