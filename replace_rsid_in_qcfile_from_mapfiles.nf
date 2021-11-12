@@ -118,6 +118,21 @@ process compare_bp_new_and_original {
       diff -s qcin_bp updatedqcin_bp > matched_bp_old_and_new_${id}.diff
       """
 }
+process compare_columns_new_and_original {
+    publishDir "${params.outdir}/intermediates/${id}", mode: 'rellink', overwrite: true
+    publishDir "${params.outdir}/diff_checks/${id}", mode: 'copy', overwrite: true, pattern: '*.diff'
+    input:
+      tuple val(id), path("updatedqcin.gz"), path(qcin), path(map)
+    output:
+      path("*.diff")
+      path("*_head")
+    script:
+      """
+      head -n1 <(zcat ${qcin}) > qcin_head
+      head -n1 <(zcat updatedqcin.gz) > updatedqcin_head
+      diff -s qcin_head updatedqcin_head > matched_columns_old_and_new_${id}.diff
+      """
+}
 
 workflow {
 
@@ -142,6 +157,7 @@ workflow {
 
   // Sanity check
   compare_bp_new_and_original(compare_bp_ch)
+  compare_columns_new_and_original(compare_bp_ch)
 
 }
 
